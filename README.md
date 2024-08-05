@@ -33,3 +33,29 @@ The `clsx` library allows adding conditional classes more easily:
   )}
 </span>
 ```
+
+### Chapter 3 - Optimizing fonts and images
+
+The `next/font` module automatically optimizes fonts - it downloads them at build time and hosts them with other static assets. It provides an easy way to add and use Google fonts:
+```
+import { NAME_OF_FONT } from "next/font/google";
+
+export const name_of_font = NAME_OF_FONT({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+});
+```
+
+`Next.js` provides an `Image` component that comes with automatic image optimization:
+```
+(...)
+import Image from "next/image";
+(...)
+
+<Image
+  src="/IMAGE_NAME.png"
+  width={1000}
+  height={760}
+  alt="A suitable image description"
+/>
+```
