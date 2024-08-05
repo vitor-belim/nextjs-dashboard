@@ -71,3 +71,7 @@ Routing in `Next.js` is achieved using file-system routing:
 The `page.tsx` component is the route page, the `layout.tsx` component is the UI shared between the current route and its sub-routes. Creating a `layout.tsx` in `app/dashboard` shares that UI between the dashboard page and all its sub-pages.
 
 Any UI that is added to the `RootLayout` component will be shared across all pages in the application. This component can be used to modify the `html` and `body` tags, and add metadata.
+
+### Chapter 5 - Navigating between pages
+
+The `Link` component (at `next/link`) allows changing pages without a full-page reload. Next.js preloads the content of `Links` when they become available in the page, making transitions between pages instant. The `usePathname()` hook provides a way to obtain the current route being accessed.
