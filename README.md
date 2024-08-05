@@ -81,3 +81,9 @@ The `Link` component (at `next/link`) allows changing pages without a full-page 
 `Vercel` integrates directly with `Node.js` projects, allowing for an easy setup of a Postgres database.
 
 The `route.ts` filename provides a public server-side endpoint, using the same file-system routing as the routes in Chapter 4.
+
+### Chapter 7 - Fetching data
+
+Components can be `async`, allowing the render to happen only when all promises within have been resolved. This also creates some problems:
+- Sequential `await` instructions require each data retrieval to end before starting the next one(s).
+- Any slow requests will hold the loading of the entire page.
