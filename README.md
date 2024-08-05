@@ -59,3 +59,15 @@ import Image from "next/image";
   alt="A suitable image description"
 />
 ```
+
+### Chapter 4 - Creating layouts and pages
+
+Routing in `Next.js` is achieved using file-system routing:
+- `app/page.tsx` - route `/`
+- `app/dashboard/page.tsx` - route `/dashboard`
+- `app/dashboard/customers/page.tsx` - route `/dashboard/customers`
+- `app/dashboard/invoices/page.tsx` - route `/dashboard/invoices`
+
+The `page.tsx` component is the route page, the `layout.tsx` component is the UI shared between the current route and its sub-routes. Creating a `layout.tsx` in `app/dashboard` shares that UI between the dashboard page and all its sub-pages.
+
+Any UI that is added to the `RootLayout` component will be shared across all pages in the application. This component can be used to modify the `html` and `body` tags, and add metadata.
