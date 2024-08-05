@@ -75,3 +75,9 @@ Any UI that is added to the `RootLayout` component will be shared across all pag
 ### Chapter 5 - Navigating between pages
 
 The `Link` component (at `next/link`) allows changing pages without a full-page reload. Next.js preloads the content of `Links` when they become available in the page, making transitions between pages instant. The `usePathname()` hook provides a way to obtain the current route being accessed.
+
+### Chapter 6 - Setting up the database
+
+`Vercel` integrates directly with `Node.js` projects, allowing for an easy setup of a Postgres database.
+
+The `route.ts` filename provides a public server-side endpoint, using the same file-system routing as the routes in Chapter 4.
