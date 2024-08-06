@@ -117,3 +117,41 @@ PPR is an experimental feature from `Next.js` that pre-renders static content an
 - Add `export const experimental_ppr = true;` in the `layout.tsx` file of routes that should use PPR.
 
 This feature depends on the usage of `Suspense` to determine which parts are static and which are dynamic.
+
+### Chapter 11 - Adding search and pagination
+
+The `"use client";` instruction defines client components, allowing the use of events listeners and hooks.
+
+Search params can be used to keep search consistent between client and server. To update search params use this strategy:
+```
+"use client;"
+
+(...)
+
+const searchParams = useSearchParams();     // get search params
+const pathname = usePathname();             // get current route (e.g. /dashboard/invoices)
+const { replace } = useRouter();            // method to update URL without reloading page
+
+const handleUserAction = () => {
+  const params = new URLSearchParams(searchParams);
+
+  params.set('param', 'new value');
+
+  replace(`${pathname}?${params.toString()}`);
+};
+```
+
+When using server components (components that require API calls), accessing search params is possible using page props. `page.tsx` files can have parameters (see [page props](https://nextjs.org/docs/app/api-reference/file-conventions/page#props)), although `Next.js` is missing interfaces for them.
+
+The library `use-debounce` provides an easy way to debounce function calls:
+```
+(...)
+import { useDebouncedCallback } from "use-debounce";
+(...)
+
+const normalFunction = (...params) => {
+  // Do stuff
+};
+
+const debouncedFunction = useDebouncedCallback(normalFunction, 400);
+```

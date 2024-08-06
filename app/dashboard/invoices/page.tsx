@@ -1,7 +1,44 @@
-import React from "react";
+import { fetchInvoicesPages } from "@/app/lib/data";
+import { lusitana } from "@/app/ui/fonts";
+import { CreateInvoice } from "@/app/ui/invoices/buttons";
+import Pagination from "@/app/ui/invoices/pagination";
+import InvoicesTable from "@/app/ui/invoices/table";
+import Search from "@/app/ui/search";
+import { InvoicesTableSkeleton } from "@/app/ui/skeletons";
+import { Suspense } from "react";
 
-const Page = () => {
-  return <p>Invoices Page</p>;
-};
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: {
+    query?: string;
+    page?: string;
+  };
+}) {
+  const query = searchParams?.query || "";
+  const currentPage = Number(searchParams?.page) || 1;
+  const limit = 8;
 
-export default Page;
+  const totalPages = await fetchInvoicesPages(query, limit);
+
+  return (
+    <div className="w-full">
+      <div className="flex w-full items-center justify-between">
+        <h1 className={`${lusitana.className} text-2xl`}>Invoices</h1>
+      </div>
+      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+        <Search placeholder="Search invoices..." />
+        <CreateInvoice />
+      </div>
+      <Suspense
+        key={query + currentPage}
+        fallback={<InvoicesTableSkeleton rows={limit} />}
+      >
+        <InvoicesTable query={query} currentPage={currentPage} limit={limit} />
+      </Suspense>
+      <div className="mt-5 flex w-full justify-center">
+        <Pagination totalPages={totalPages} />
+      </div>
+    </div>
+  );
+}
