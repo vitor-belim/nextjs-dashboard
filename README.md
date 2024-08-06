@@ -87,3 +87,8 @@ The `route.ts` filename provides a public server-side endpoint, using the same f
 Components can be `async`, allowing the render to happen only when all promises within have been resolved. This also creates some problems:
 - Sequential `await` instructions require each data retrieval to end before starting the next one(s).
 - Any slow requests will hold the loading of the entire page.
+- Data updates will not be reflected in the page automatically.
+
+### Chapter 8 - Static and dynamic rendering
+
+Static rendering allows for faster loads and reduced server load (content cached), but does not work for heavily personalized pages (can't be shared between different users). Dynamic rendering allows rendering to happen just-in-time, but forces the application to be as fast as the slowest data fetch.
