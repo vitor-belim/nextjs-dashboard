@@ -109,3 +109,11 @@ import { Suspense } from "react";
   <Component />
 </Suspense>
 ```
+
+### Chapter 10 - Partial pre-rendering (PPR)
+
+PPR is an experimental feature from `Next.js` that pre-renders static content and defers the dynamic parts until the user requests them. To use this feature:
+- Add flag `ppr: "incremental"` in the `experimental` object within `next.config.mjs`.
+- Add `export const experimental_ppr = true;` in the `layout.tsx` file of routes that should use PPR.
+
+This feature depends on the usage of `Suspense` to determine which parts are static and which are dynamic.
