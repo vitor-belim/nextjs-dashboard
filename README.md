@@ -92,3 +92,20 @@ Components can be `async`, allowing the render to happen only when all promises 
 ### Chapter 8 - Static and dynamic rendering
 
 Static rendering allows for faster loads and reduced server load (content cached), but does not work for heavily personalized pages (can't be shared between different users). Dynamic rendering allows rendering to happen just-in-time, but forces the application to be as fast as the slowest data fetch.
+
+### Chapter 9 - Streaming
+
+The `loading.tsx` file allows for a transition state between the load of the data and the generated UI. It is shown during the preparation of the upcoming `page.tsx` (`async/await`), and allows interaction with the remaining UI during that time.
+
+When attempting to add a `loading.tsx` file to a route but not all of its children, we can create a route group by creating a new folder "(A_GIVEN_NAME)" (usually "overview") inside the route and moving the route-specific files to it (like `loading.tsx` and `page.tsx`). These files will then NOT be shared with the route's children, and folders enclosed in parentheses are not included in the URL path, so it's also a nice way to organize content.
+
+By moving data requests further down into the components, we can achieve incremental loading of the page since each component will render itself when ready. To make sure the parent component does not hang while waiting for children components to resolve, we use `<Suspense />`:
+```
+(...)
+import { Suspense } from "react";
+(...)
+
+<Suspense fallback={<ComponentSkeleton />}>
+  <Component />
+</Suspense>
+```
