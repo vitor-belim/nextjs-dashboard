@@ -155,3 +155,76 @@ const normalFunction = (...params) => {
 
 const debouncedFunction = useDebouncedCallback(normalFunction, 400);
 ```
+
+### Chapter 12 - Mutating data
+
+React Server Actions are functions that run directly on the server. To achieve this, there are 2 ways: adding `"use server";` at the top of the action, or adding `"use server";` to the beginning of the file that will contain the actions.
+
+The `<form>`'s `action` attribute in React can invoke functions that automatically receive the native `FormData` object:
+```
+const handleSubmit = (formData: FormData) => {
+  "use server";
+
+  // Mutate data...
+};
+
+(...)
+
+<form action={handleSubmit}>
+  (...)
+</form>
+```
+
+To create a dynamic route segment (e.g. `/your-path/{id}/edit`):
+- Add a folder called `[id]` within `/your-path`.
+- Add a folder called `edit` within `/your-path/[id]`.
+- Add a file `page.tsx` within `/your-path/[id]/edit`.
+- Access the `id` parameter using the page's `params` prop:
+```
+export default async function Page({ params }: { params: { id: string } }) {
+  const id = params.id;
+
+  (...)
+}
+```
+
+To define a data structure using `Zod`, and then use it for input validation, do the following:
+```
+(...)
+import { z } from "zod";
+(...)
+
+const formSchema = z.object({
+  id: z.string(),
+  amount: z.coerce.number(),
+  status: z.enum(["pending", "paid"]),
+});
+
+const actionXptoSchema = formSchema.omit({ id: true });
+
+(...)
+
+export async function doSomethingInDatabase(formData: FormData) {
+  const { amount, status } = actionXptoSchema.parse({
+    amount: formData.get("amount"),
+    status: formData.get("status"),
+  });
+
+  (...)
+}
+```
+
+`Next.js` has client-side router caching, so when data changes, the route's cache needs to be revalidated. When calling `revalidatePath` on the current page, the page's data is reloaded. To issue a revalidation of a path, simply call `revalidatePath('/path/to/revalidate')` (import it from `next/cache`).
+
+When invoking server actions that have extra arguments, use `bind`:
+```
+const id = 123; // Example
+const doServerActionWithId = serverActionWithId.bind(null, id);
+
+(...)
+
+<form action={doServerActionWithId}>
+  (...)
+</form>
+```
+The action's signature will then become `serverActionWithId(id: string, formData: FormData)`.
