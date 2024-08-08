@@ -228,3 +228,44 @@ const doServerActionWithId = serverActionWithId.bind(null, id);
 </form>
 ```
 The action's signature will then become `serverActionWithId(id: string, formData: FormData)`.
+
+### Chapter 13 - Handling errors
+
+SQL statements should be within a try/catch block, and errors should return an object containing details of the error. To handle a response from a server action, we can use the hook `useActionState` (requires a client component). When using the `useActionState`, the server action's signature changes to `serverAction(previousState: any, formData: FormData)`. The implementation works like this:
+```
+"use client";
+
+import { useActionState } from "react";
+
+const initialState = {
+  message: "",
+};
+
+export default function Component() {
+  let [state, formAction] = useActionState(serverAction, initialState);
+
+  (...)
+
+  <form action={formAction}>
+    (...)
+  </form>
+}
+```
+
+The `error.tsx` file (must be a client component) handles any and all errors thrown within a route. To implement it:
+```
+"use client";
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+    (...)
+}
+```
+The `error.tsx` page will catch any errors within the route where it exists, and any of its children routes as well. The `reset()` function can be used to attempt to recover from the error by re-rendering the route where `error.tsx` is placed in.
+
+To handle 404 errors, we can use `Next.js`'s `notFound()` function, imported from `next/navigation`. To customize the 404 page, we can create a `not-found.tsx` page. The `not-found.tsx` page will take precedence over the `error.tsx` page.

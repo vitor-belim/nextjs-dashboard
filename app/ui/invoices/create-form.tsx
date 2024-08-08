@@ -1,3 +1,5 @@
+"use client";
+
 import { createInvoice } from "@/app/lib/actions";
 import { CustomerField } from "@/app/lib/definitions";
 import { Button } from "@/app/ui/button";
@@ -8,10 +10,43 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useActionState, useEffect, useState } from "react";
+
+const initialState = {
+  message: "",
+};
 
 export default function Form({ customers }: { customers: CustomerField[] }) {
+  const [errorMessage, setErrorMessage] = useState("");
+  const [_errorTimeout, setErrorTimeout] = useState<number | undefined>(
+    undefined,
+  );
+  let [actionState, formAction] = useActionState(createInvoice, initialState);
+
+  useEffect(() => {
+    if (actionState?.message) {
+      setErrorMessage(actionState.message);
+
+      setErrorTimeout((currentErrorTimeout) => {
+        if (currentErrorTimeout) {
+          clearTimeout(currentErrorTimeout);
+        }
+
+        return window.setTimeout(() => {
+          setErrorMessage("");
+        }, 2500);
+      });
+    }
+  }, [actionState]);
+
   return (
-    <form action={createInvoice}>
+    <form action={formAction}>
+      {errorMessage && (
+        <div className="absolute top-8 right-8 flex items-center justify-center bg-red-500 p-2 rounded text-white">
+          {errorMessage}
+        </div>
+      )}
+
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
