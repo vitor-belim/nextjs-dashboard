@@ -263,9 +263,65 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-    (...)
+  (...)
 }
 ```
 The `error.tsx` page will catch any errors within the route where it exists, and any of its children routes as well. The `reset()` function can be used to attempt to recover from the error by re-rendering the route where `error.tsx` is placed in.
 
 To handle 404 errors, we can use `Next.js`'s `notFound()` function, imported from `next/navigation`. To customize the 404 page, we can create a `not-found.tsx` page. The `not-found.tsx` page will take precedence over the `error.tsx` page.
+
+### Chapter 14 - Improving accessibility
+
+`Next.js` includes the `eslint-plugin-jsx-ally` plugin to help catch accessibility issues early on. To run it, run the command `pnpm lint` (script `next lint`).
+
+`Zod` can be used to validate form data and customize errors. Keep in mind that the method for parsing the form data changes from `parse` to `safeParse`. Examples on usage:
+```
+const formSchema = z.object({
+  customerId: z.string({
+    invalid_type_error: 'Please select a customer.',
+  }),
+  amount: z.coerce
+    .number()
+    .gt(0, { message: 'Please enter an amount greater than $0.' }),
+  status: z.enum(['pending', 'paid'], {
+    invalid_type_error: 'Please select an invoice status.',
+  }),
+});
+
+(...)
+
+export async function serverAction(prevState: State, formData: FormData) {
+  const validatedFields = CreateInvoice.safeParse({
+    (...)
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Invoice.',
+    };
+  }
+
+  const { customerId, amount, status } = validatedFields.data;
+  (...)
+}
+```
+
+To display errors from a server action, use the `state` field returned from the `useActionState()` hook:
+```
+<select
+  (...)
+  aria-describedby="named-error"
+>
+  (...)
+</select>
+
+<div id="named-error" aria-live="polite" aria-atomic="true">
+  {state.errors?.customerId &&
+    state.errors.customerId.map((error: string) => (
+      <p className="mt-2 text-sm text-red-500" key={error}>
+        {error}
+      </p>
+    ))}
+</div>
+```
