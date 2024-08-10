@@ -325,3 +325,42 @@ To display errors from a server action, use the `state` field returned from the 
     ))}
 </div>
 ```
+
+### Chapter 15 - Adding authentication
+
+Adding authentication to a Next.js project is made easier by using the `NextAuth.js` library:
+- Commands:
+  - `pnpm i next-auth@beta` installs the `NextAuth.js` library.
+  - `openssl rand -base64 32` generates an auth secret, which needs to be placed in the `.env` file in key `AUTH_SECRET`.
+- Files:
+  - `/auth.config.ts` is the configuration for authentication.
+  - `/auth.ts` implements and exports the `signIn` and `signOut` functions.
+  - `/middleware.ts` sets up a matching middleware for any assets or routes.
+- Authenticate server action:
+```
+export async function authenticate(
+  _prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    await signIn("credentials", formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return "Invalid credentials.";
+        default:
+          return "Something went wrong.";
+      }
+    }
+
+    throw error;
+  }
+}
+```
+- Logout server action:
+```
+export async function logout() {
+  await signOut();
+}
+```
