@@ -364,3 +364,23 @@ export async function logout() {
   await signOut();
 }
 ```
+
+### Chapter 16 - Adding metadata
+
+To add metadata do a page, we just need to export a `metadata` variable of type `Metadata` (from `next`). Metadata can be inherited by children routes when within a `layout.tsx` file by using a `%s` template string like this:
+```
+// BASE ROUTE - layout.tsx
+
+export const metadata: Metadata = {
+  title: {
+    template: "%s | Base",
+    default: "Base Title",            // parent route title: "Base Title"
+  },
+};
+
+// CHILD ROUTE - page.tsx
+
+export const metadata: Metadata = {
+  title: "Child",                     // child route title: "Child | Base"
+};
+```
