@@ -1,4 +1,4 @@
-import { fetchCardData } from "@/app/lib/data";
+import { fetchCardData } from "@/app/lib/data/data-dashboard";
 import { lusitana } from "@/app/ui/fonts";
 import {
   BanknotesIcon,

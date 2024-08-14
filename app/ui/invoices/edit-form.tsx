@@ -1,6 +1,9 @@
 "use client";
 
-import { State, updateInvoice } from "@/app/lib/actions";
+import {
+  InvoiceFormState,
+  updateInvoice,
+} from "@/app/lib/actions/actions-invoices";
 import { CustomerField, InvoiceForm } from "@/app/lib/definitions";
 import { Button } from "@/app/ui/button";
 import {
@@ -19,7 +22,7 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
-  const initialState: State = {
+  const initialState: InvoiceFormState = {
     message: null,
     errors: {},
   };

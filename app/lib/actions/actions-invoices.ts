@@ -1,13 +1,11 @@
 "use server";
 
-import { signIn, signOut } from "@/auth";
+import { revalidateAndRedirect } from "@/app/lib/actions/actions";
 import { sql } from "@vercel/postgres";
-import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 
-export type State =
+export type InvoiceFormState =
   | {
       errors?: {
         customerId?: string[];
@@ -35,12 +33,10 @@ const invoiceFormSchema = z.object({
 const CreateInvoice = invoiceFormSchema.omit({ id: true, date: true });
 const UpdateInvoice = invoiceFormSchema.omit({ id: true, date: true });
 
-const revalidateAndRedirect = (path: string) => {
-  revalidatePath(path);
-  redirect(path);
-};
-
-export async function createInvoice(_prevState: State, formData: FormData) {
+export async function createInvoice(
+  _prevState: InvoiceFormState,
+  formData: FormData,
+) {
   const validatedFields = CreateInvoice.safeParse({
     customerId: formData.get("customerId"),
     amount: formData.get("amount"),
@@ -69,12 +65,12 @@ export async function createInvoice(_prevState: State, formData: FormData) {
     };
   }
 
-  revalidateAndRedirect("/dashboard/invoices");
+  await revalidateAndRedirect("/dashboard/invoices");
 }
 
 export async function updateInvoice(
   id: string,
-  _prevState: State,
+  _prevState: InvoiceFormState,
   formData: FormData,
 ) {
   const validatedFields = UpdateInvoice.safeParse({
@@ -105,7 +101,7 @@ export async function updateInvoice(
     };
   }
 
-  revalidateAndRedirect("/dashboard/invoices");
+  await revalidateAndRedirect("/dashboard/invoices");
 }
 
 export async function deleteInvoice(id: string) {
@@ -118,28 +114,4 @@ export async function deleteInvoice(id: string) {
   }
 
   revalidatePath("/dashboard/invoices");
-}
-
-export async function authenticate(
-  _prevState: string | undefined,
-  formData: FormData,
-) {
-  try {
-    await signIn("credentials", formData);
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return "Invalid credentials.";
-        default:
-          return "Something went wrong.";
-      }
-    }
-
-    throw error;
-  }
-}
-
-export async function logout() {
-  await signOut();
 }

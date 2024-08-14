@@ -1,6 +1,9 @@
 "use client";
 
-import { createInvoice, State } from "@/app/lib/actions";
+import {
+  createInvoice,
+  InvoiceFormState,
+} from "@/app/lib/actions/actions-invoices";
 import { CustomerField } from "@/app/lib/definitions";
 import { Button } from "@/app/ui/button";
 import {
@@ -13,7 +16,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 
 export default function Form({ customers }: { customers: CustomerField[] }) {
-  const initialState: State = {
+  const initialState: InvoiceFormState = {
     message: null,
     errors: {},
   };

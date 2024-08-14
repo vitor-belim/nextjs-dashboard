@@ -1,4 +1,4 @@
-import { fetchRevenue } from "@/app/lib/data";
+import { fetchRevenue } from "@/app/lib/data/data-dashboard";
 import { generateYAxis } from "@/app/lib/utils";
 import { lusitana } from "@/app/ui/fonts";
 import { CalendarIcon } from "@heroicons/react/24/outline";

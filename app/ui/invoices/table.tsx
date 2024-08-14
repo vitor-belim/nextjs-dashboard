@@ -1,7 +1,8 @@
-import { fetchFilteredInvoices } from "@/app/lib/data";
+import { fetchFilteredInvoices } from "@/app/lib/data/data-invoices";
 import { formatCurrency, formatDateToLocal } from "@/app/lib/utils";
 import { DeleteInvoice, UpdateInvoice } from "@/app/ui/invoices/buttons";
 import InvoiceStatus from "@/app/ui/invoices/status";
+import { UserIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 
 export default async function InvoicesTable({
@@ -28,13 +29,17 @@ export default async function InvoicesTable({
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
                     <div className="mb-2 flex items-center">
-                      <Image
-                        src={invoice.image_url}
-                        className="mr-2 rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${invoice.name}'s profile picture`}
-                      />
+                      {invoice.image_url ? (
+                        <Image
+                          src={invoice.image_url}
+                          className="rounded-full"
+                          alt={`${invoice.name}'s profile picture`}
+                          width={28}
+                          height={28}
+                        />
+                      ) : (
+                        <UserIcon height={28} width={28} />
+                      )}
                       <p>{invoice.name}</p>
                     </div>
                     <p className="text-sm text-gray-500">{invoice.email}</p>
@@ -87,13 +92,17 @@ export default async function InvoicesTable({
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
-                      <Image
-                        src={invoice.image_url}
-                        className="rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${invoice.name}'s profile picture`}
-                      />
+                      {invoice.image_url ? (
+                        <Image
+                          src={invoice.image_url}
+                          className="rounded-full"
+                          alt={`${invoice.name}'s profile picture`}
+                          width={28}
+                          height={28}
+                        />
+                      ) : (
+                        <UserIcon height={28} width={28} />
+                      )}
                       <p>{invoice.name}</p>
                     </div>
                   </td>
