@@ -386,5 +386,8 @@ export const metadata: Metadata = {
 ```
 
 ### Improvements
-
 - [2024-08-14] Created `/dashboard/customers` page using same logical structure as `/dashboard/invoices`. Restructured and refactored some files.
+
+
+### TODO
+- Fix production authentication
